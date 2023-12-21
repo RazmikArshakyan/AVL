@@ -10,6 +10,11 @@ inline void AVL::insert(int val)
     root = insert(root, val);
 }
 
+inline void AVL::remove(int val)
+{
+    root = remove(root, val);
+}
+
 inline int AVL::get_height(Node *node)
 {
     if (!node) {
@@ -71,27 +76,63 @@ Node *AVL::insert(Node *node, int val)
         node->left = insert(node->left, val);
     }
 
-    return update(node, val);
+    return balance(node, val);
 }
 
-inline Node* AVL::update(Node *node, int val)
+inline Node *AVL::remove(Node *node, int val)
+{
+    Node* tmp;
+    if (!node) {
+        return nullptr;
+    }
+
+    if (node->val < val) {
+        node->right = remove(node->right, val);
+    }
+    else if (node->val > val) {
+        node->left = remove(node->left, val);
+    }
+    else if (node->left && node->right) {
+        tmp = min_node(node->right);
+        node->val = tmp->val;
+        node->right = remove(node->right, node->val);
+    }
+    else {
+        tmp = node;
+        if (!node->left) {
+            node = node->right;
+        }
+        else if (!node->right) {
+            node = node->left;
+        }
+        delete tmp;
+    }
+
+    return balance(node, val);
+}
+
+inline Node* AVL::balance(Node *&node, int val)
 {
     if (node) {
-        update(node->left, val);
-        update(node->right, val);
-        if (get_bf(node) > 1 && node->left->val > val) {
-            return right_rotate(node);
+        balance(node->left, val);
+        balance(node->right, val);
+        if (get_bf(node) > 1) {
+            if (node->left && node->left->val > val) {
+                node = right_rotate(node);
+            }
+            else {
+                node->left = left_rotate(node->left);
+                node = right_rotate(node);
+            }
         }
-        else if (get_bf(node) > 1 && node->left->val <= val) {
-            node = left_rotate(node);
-            return right_rotate(node);
-        }
-        else if (get_bf(node) < -1 && node->right->val < val) {
-            return left_rotate(node);
-        }
-        else if (get_bf(node) < -1 && node->right->val >= val) {
-            node = right_rotate(node);
-            return left_rotate(node);
+        else if (get_bf(node) < -1) {
+            if (node->right && node->right->val < val) {
+                node = left_rotate(node);
+            }
+            else {
+                node->right = right_rotate(node->right);
+                node = left_rotate(node);
+            }
         }
     } 
     return node;

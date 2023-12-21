@@ -14,6 +14,7 @@ struct Node {
 class AVL {
 public: 
     void insert(int val);
+    void remove(int val);
     int get_height(Node* node);
     int get_bf(Node* node);
     Node* min_node(Node* node);
@@ -22,7 +23,8 @@ public:
 
 private:
     Node* insert(Node* node, int val);
-    Node* update(Node* node, int val);
+    Node* remove(Node* node, int val);
+    Node* balance(Node*& node, int val);
     Node* root = nullptr;
 };
 

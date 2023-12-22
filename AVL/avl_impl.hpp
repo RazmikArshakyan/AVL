@@ -63,6 +63,45 @@ inline Node *AVL::right_rotate(Node *node)
     return t;
 }
 
+inline void AVL::level_order_traversal(Node *node)
+{
+    if (!node) {
+        return;
+    }
+
+    std::queue<Node*> q;
+    q.push(node);
+
+    while (!q.empty()) {
+        int level_size = q.size();
+
+        for (int i = 0; i < level_size; ++i) {
+            Node* curr = q.front();
+            q.pop();
+
+            std::cout << curr->val << " ";
+
+            if (curr->left)
+                q.push(curr->left);
+
+            if (curr->right)
+                q.push(curr->right);
+        }
+
+        std::cout << std::endl;
+    }
+}
+
+inline Node *AVL::get_root()
+{
+    return root;
+}
+
+inline void AVL::level_order_traversal()
+{
+    level_order_traversal(root);
+}
+
 Node *AVL::insert(Node *node, int val)
 {
     if (!node) {
@@ -137,3 +176,4 @@ inline Node* AVL::balance(Node *&node, int val)
     } 
     return node;
 }
+

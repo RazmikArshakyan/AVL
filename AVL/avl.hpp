@@ -2,6 +2,8 @@
 #define AVL_H
 
 #include <iostream>
+#include <cmath>
+#include <queue>
 
 struct Node {
     Node(int val);
@@ -20,12 +22,15 @@ public:
     Node* min_node(Node* node);
     Node* left_rotate(Node* node);
     Node* right_rotate(Node* node);
+    Node* get_root();
+    void level_order_traversal();
 
 private:
     Node* insert(Node* node, int val);
     Node* remove(Node* node, int val);
     Node* balance(Node*& node, int val);
     Node* root = nullptr;
+    void level_order_traversal(Node* node);
 };
 
 #include "avl_impl.hpp"
